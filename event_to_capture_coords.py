@@ -1,20 +1,12 @@
-# Taken from husano896's PR thread:
-import pygame
-from pygame.locals import *
-pygame.init()
-screen = pygame.display.set_mode((640,480))
-clock = pygame.time.Clock()
+from pynput.mouse import Listener
+import csv
 
-def main():
-   while True:
-      for event_var in pygame.event.get():
-            if event_var.type == QUIT:
-               pygame.quit()
-               return
-            elif event_var.type == MOUSEWHEEL:
-               print(event_var) # can access properties with prop notation
-                                # (ex: event_var.y)
-      clock.tick(60)
+def on_click(x, y, button, pressed):
+    if str(button) == 'Button.left':
+        row_contents = [x,y]
+        with open('resources.csv', 'a+', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(row_contents)
 
-# Execute game:
-main()
+with Listener(on_click=on_click) as listener:
+    listener.join()
